@@ -20,7 +20,7 @@ DB_USER = "postgres"
 DB_PASS = "2005"
 
 
-def command(cmd): #Функция, которая выполняет SQL-запрос, и возвращает строки из таблицы
+def command(cmd): #Г”ГіГ­ГЄГ¶ГЁГї, ГЄГ®ГІГ®Г°Г Гї ГўГ»ГЇГ®Г«Г­ГїГҐГІ SQL-Г§Г ГЇГ°Г®Г±, ГЁ ГўГ®Г§ГўГ°Г Г№Г ГҐГІ Г±ГІГ°Г®ГЄГЁ ГЁГ§ ГІГ ГЎГ«ГЁГ¶Г»
     connection = psycopg2.connect(host = DB_HOST,
                                  user = DB_USER,
                                  password = DB_PASS,
@@ -39,7 +39,7 @@ def command(cmd): #Функция, которая выполняет SQL-запрос, и возвращает строки из
     cursor.close()
     return rows if rows else []
 
-def parent_table(table, value, operation, item = None, item_2 = None): #Функция выполняющая запросы для родительских таблиц
+def parent_table(table, value, operation, item = None, item_2 = None): #Г”ГіГ­ГЄГ¶ГЁГї ГўГ»ГЇГ®Г«Г­ГїГѕГ№Г Гї Г§Г ГЇГ°Г®Г±Г» Г¤Г«Гї Г°Г®Г¤ГЁГІГҐГ«ГјГ±ГЄГЁГµ ГІГ ГЎГ«ГЁГ¶
     result = ""
     match operation:
         case 'INSERT':
@@ -59,7 +59,7 @@ def parent_table(table, value, operation, item = None, item_2 = None): #Функция 
         except:
             return (f"Error, [{table}] or [{value}] do not exist - probably")
 
-#Функция выполняющая запросы для таблицы main
+#Г”ГіГ­ГЄГ¶ГЁГї ГўГ»ГЇГ®Г«Г­ГїГѕГ№Г Гї Г§Г ГЇГ°Г®Г±Г» Г¤Г«Гї ГІГ ГЎГ«ГЁГ¶Г» main
 def main(operation,
         fam = "Not stated",
         name = "Not stated", 
@@ -69,7 +69,7 @@ def main(operation,
         bldng_k = "Not stated", 
         appr = "Not stated", 
         telef = "Not stated",
-        new_values = dict()): #new_values передаём только для операции UPDATE; ма
+        new_values = dict()): #new_values ГЇГҐГ°ГҐГ¤Г ВёГ¬ ГІГ®Г«ГјГЄГ® Г¤Г«Гї Г®ГЇГҐГ°Г Г¶ГЁГЁ UPDATE; Г¬Г 
 
     usable = [fam, name, second_name, street, bldng, bldng_k, appr, telef]
     columns = ['fam', 'names', 'second_name', 'street', 'bldng', 'bldng_k', 'appr', 'telef']
@@ -90,9 +90,9 @@ def main(operation,
             columns = ', '.join(columns)
             result = f"""INSERT INTO main ({columns})
                         VALUES ({usable})"""
-        case 'UPDATE': #Правь эту функцию
+        case 'UPDATE': #ГЏГ°Г ГўГј ГЅГІГі ГґГіГ­ГЄГ¶ГЁГѕ
             #print(new_values)
-            columns = [columns[i] for i in range(len(usable)) if usable[i] != 'Not stated' and usable[i] != ""] #Выбираем столбцы, значение которых будет обновляться 
+            columns = [columns[i] for i in range(len(usable)) if usable[i] != 'Not stated' and usable[i] != ""] #Г‚Г»ГЎГЁГ°Г ГҐГ¬ Г±ГІГ®Г«ГЎГ¶Г», Г§Г­Г Г·ГҐГ­ГЁГҐ ГЄГ®ГІГ®Г°Г»Гµ ГЎГіГ¤ГҐГІ Г®ГЎГ­Г®ГўГ«ГїГІГјГ±Гї 
             #print(columns)
             usable = [i for i in usable if i != 'Not stated' and i != ""]
             #print(usable)
@@ -102,14 +102,14 @@ def main(operation,
             for i in range(len(usable)):
                 if i not in kyes:
                     usable[i] = f"'{usable[i]}'"
-            statement = [] #Выражение, которое будет стоять после WHERE
+            statement = [] #Г‚Г»Г°Г Г¦ГҐГ­ГЁГҐ, ГЄГ®ГІГ®Г°Г®ГҐ ГЎГіГ¤ГҐГІ Г±ГІГ®ГїГІГј ГЇГ®Г±Г«ГҐ WHERE
             for i in range(len(usable)):
                 if usable[i] != 'NULL' and usable[i] != "Not stated":
                     statement.append(f"{columns[i]} = {usable[i]}")
                 else:
                     statement.append(f"{columns[i]} IS NULL")
             statement = ' AND '.join(statement)
-            values = [] #Выражение, которое будет стоять до WHERE
+            values = [] #Г‚Г»Г°Г Г¦ГҐГ­ГЁГҐ, ГЄГ®ГІГ®Г°Г®ГҐ ГЎГіГ¤ГҐГІ Г±ГІГ®ГїГІГј Г¤Г® WHERE
             for i in new_values.keys():
                 if not(new_values[i] == "" or new_values[i] == "Not stated"):
                     #print(f"{i} >>> {new_values[i]}")
@@ -121,7 +121,7 @@ def main(operation,
             #print(values)
             result = f"UPDATE main SET {values} WHERE {statement}"
         case 'DELETE':
-            columns = [columns[i] for i in range(len(usable)) if usable[i] != 'Not stated' and usable[i] != ""] #Выбираем столбцы, по которым будет удаление
+            columns = [columns[i] for i in range(len(usable)) if usable[i] != 'Not stated' and usable[i] != ""] #Г‚Г»ГЎГЁГ°Г ГҐГ¬ Г±ГІГ®Г«ГЎГ¶Г», ГЇГ® ГЄГ®ГІГ®Г°Г»Г¬ ГЎГіГ¤ГҐГІ ГіГ¤Г Г«ГҐГ­ГЁГҐ
             usable = [i for i in usable if i != 'Not stated' and i != ""]
             for i in range(len(columns)):
                 if columns[i] in integer:
@@ -137,8 +137,8 @@ def main(operation,
                         statement.append(f"{columns[i]} = {usable[i]}")
             statement = ' AND '.join(statement)
             result = f"DELETE FROM main WHERE {statement}"
-        case 'SELECT': #Она же функция фильтрации
-            columns = [columns[i] for i in range(len(usable)) if usable[i] != 'Not stated' and usable[i] != ""] #Выбираем столбцы для выборки
+        case 'SELECT': #ГЋГ­Г  Г¦ГҐ ГґГіГ­ГЄГ¶ГЁГї ГґГЁГ«ГјГІГ°Г Г¶ГЁГЁ
+            columns = [columns[i] for i in range(len(usable)) if usable[i] != 'Not stated' and usable[i] != ""] #Г‚Г»ГЎГЁГ°Г ГҐГ¬ Г±ГІГ®Г«ГЎГ¶Г» Г¤Г«Гї ГўГ»ГЎГ®Г°ГЄГЁ
             usable = [i for i in usable if i != 'Not stated' and i != ""]
             
             for i in range(len(columns)):
@@ -152,8 +152,7 @@ def main(operation,
                     statement.append(f"{columns[i]} = {usable[i]}")
             statement = ' AND '.join(statement)
             result = """ 
-            SELECT  main.u_id,
-		            fam.f_value,
+            SELECT  fam.f_value,
 		            names.n_value,
 		            second_name.sn_value,
 		            street.s_value,
@@ -292,7 +291,7 @@ class main_window(QMainWindow):
         for i in range(len(self.table_buffer)):
             self.ui.tableWidget.insertRow(i)
             for j in range(len(self.table_buffer[i])):
-                self.ui.tableWidget.setItem(i,j-1,QTableWidgetItem(str(self.table_buffer[i][j])) )
+                self.ui.tableWidget.setItem(i,j,QTableWidgetItem(str(self.table_buffer[i][j])) )
 
 
 
@@ -383,7 +382,7 @@ class main_window(QMainWindow):
         else:
             street = "Not stated"
         if operation == "UPDATE":
-            #Не предусмотрено значение Not stated
+            #ГЌГҐ ГЇГ°ГҐГ¤ГіГ±Г¬Г®ГІГ°ГҐГ­Г® Г§Г­Г Г·ГҐГ­ГЁГҐ Not stated
             if self.second_window.fam_comboBox_2.currentText() !=  "Not stated":
                 new_fam = str(command(f"SELECT f_id FROM fam WHERE f_value = '{self.second_window.fam_comboBox_2.currentText()}'")[0][0])
             else:
@@ -404,7 +403,7 @@ class main_window(QMainWindow):
             else:
                 new_street =  "Not stated"
             new_data["street"] = new_street
-            new_data["bldng"] = self.second_window.bldng_lineEdit_2.text() #Добавь данные для обновления
+            new_data["bldng"] = self.second_window.bldng_lineEdit_2.text() #Г„Г®ГЎГ ГўГј Г¤Г Г­Г­Г»ГҐ Г¤Г«Гї Г®ГЎГ­Г®ГўГ«ГҐГ­ГЁГї
             new_data["bldng_k"] = self.second_window.bldng_k_lineEdit_2.text()
             new_data["appr"] = self.second_window.appr_lineEdit_2.text()
             new_data["telef"] = self.second_window.telef_lineEdit_2.text()
@@ -418,7 +417,7 @@ class main_window(QMainWindow):
             else:
                 
                 main(operation, fam, name, second_name, street, query_items[4], query_items[5], query_items[6], query_items[7], new_data)
-                self.table_buffer = get_table(self.table_buffer_queary) # Стоит не получать заново всю таблицу, а добавлять новую запись
+                self.table_buffer = get_table(self.table_buffer_queary) # Г‘ГІГ®ГЁГІ Г­ГҐ ГЇГ®Г«ГіГ·Г ГІГј Г§Г Г­Г®ГўГ® ГўГ±Гѕ ГІГ ГЎГ«ГЁГ¶Гі, Г  Г¤Г®ГЎГ ГўГ«ГїГІГј Г­Г®ГўГіГѕ Г§Г ГЇГЁГ±Гј
 
             self.show_data_base()
             #print("")
